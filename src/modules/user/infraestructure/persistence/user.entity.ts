@@ -10,26 +10,28 @@ import {
 
 @Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  /* @PrimaryGeneratedColumn('uuid')//Alfanumerico
+  id: string; */
+  @PrimaryGeneratedColumn() //Autoincremental
   id: number;
 
-  @Column({ length: 256 })
+  @Column({ length: 64 })
   name: string;
 
   @Column()
   age: number;
 
-  @Index({ unique: true })
+  /* @Index({ unique: true }) */
   @Column({ type: 'varchar', length: 64, unique: true })
   @IsEmail()
   email: string;
 
-  @CreateDateColumn({ name: 'created_at'})
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updated_at'})
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @Column({ name: 'is_deleted', default: false})
+  @Column({ name: 'is_deleted', default: false })
   isDeleted: boolean;
 }

@@ -4,6 +4,7 @@ import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UserRepositoryImpl implements IUserRepository {
@@ -15,19 +16,27 @@ export class UserRepositoryImpl implements IUserRepository {
   async findById(id: number): Promise<User | null> {
     throw new Error('Method not implemented.');
   }
+
   async findAll(): Promise<User[]> {
     throw new Error('Method not implemented.');
   }
-  async createUser(user: User): Promise<User> {
-    throw new Error('Method not implemented.');
+
+  async createUser(userDomain: User): Promise<User> {
+    const userEntity = UserMapper.domainToEntity(userDomain);
+    
+    const savedUser = await this.userRepository.save(userEntity);
+    
+    return UserMapper.entityToDomain(savedUser);
   }
+
   async updateUser(user: User): Promise<User> {
     throw new Error('Method not implemented.');
   }
+
   async deleteUser(id: number): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  
+
   /* async create(user: User): Promise<User> {
     const userOrmEntity = this.toPersistence(user);
     const savedUser = await this.userRepository.save(userOrmEntity);

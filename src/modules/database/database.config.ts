@@ -15,7 +15,7 @@ export const typeOrmConfig = (
     password,
     database,
     entities: [UserEntity],
-    synchronize: false,
+    synchronize: true,
     logging: true,
   };
 };

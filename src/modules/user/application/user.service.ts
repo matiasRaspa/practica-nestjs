@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { IUserRepository } from '../domain/user.repository';
+import { User } from '../domain/user';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @Inject('UserRepository')
+    private readonly userRepository: IUserRepository,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    const userDomain = new User(createUserDto);
+    return this.userRepository.createUser(userDomain);
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.userRepository.findAll();
   }
 
   findOne(id: number) {
@@ -24,3 +32,7 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
 }
+function entityToDomain() {
+  throw new Error('Function not implemented.');
+}
+
