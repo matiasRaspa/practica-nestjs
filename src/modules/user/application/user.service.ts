@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUserRepository } from '../domain/user.repository';
@@ -16,12 +16,16 @@ export class UserService {
     return this.userRepository.createUser(userDomain);
   }
 
-  findAll() {
-    return this.userRepository.findAll();
+  async findAll() {
+    return await this.userRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const userDomain = await this.userRepository.findById(id);
+    if (!userDomain) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+    return userDomain;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -35,4 +39,3 @@ export class UserService {
 function entityToDomain() {
   throw new Error('Function not implemented.');
 }
-

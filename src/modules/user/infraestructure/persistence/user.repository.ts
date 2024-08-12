@@ -14,18 +14,26 @@ export class UserRepositoryImpl implements IUserRepository {
   ) {}
 
   async findById(id: number): Promise<User | null> {
-    throw new Error('Method not implemented.');
+    const userEntity = await this.userRepository.findOneBy({ id });
+    if (!userEntity) {
+      return null;
+    }
+    return UserMapper.entityToDomain(userEntity);
   }
 
   async findAll(): Promise<User[]> {
-    throw new Error('Method not implemented.');
+    const userEntityList = await this.userRepository.find();
+    const userDomainList = userEntityList.map((u) =>
+      UserMapper.entityToDomain(u),
+    );
+    return userDomainList;
   }
 
   async createUser(userDomain: User): Promise<User> {
     const userEntity = UserMapper.domainToEntity(userDomain);
-    
+
     const savedUser = await this.userRepository.save(userEntity);
-    
+
     return UserMapper.entityToDomain(savedUser);
   }
 
