@@ -37,17 +37,15 @@ export class UserRepositoryImpl implements IUserRepository {
     return UserMapper.entityToDomain(savedUser);
   }
 
-  async updateUser(user: User): Promise<User> {
-    throw new Error('Method not implemented.');
+  async updateUser(userDomain: User): Promise<User> {
+    const userEntity = UserMapper.domainToEntity(userDomain);
+
+    const savedUser = await this.userRepository.save(userEntity);
+
+    return UserMapper.entityToDomain(savedUser);
   }
 
   async deleteUser(id: number): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.userRepository.delete(id);
   }
-
-  /* async create(user: User): Promise<User> {
-    const userOrmEntity = this.toPersistence(user);
-    const savedUser = await this.userRepository.save(userOrmEntity);
-    return this.toDomain(savedUser);
-  } */
 }

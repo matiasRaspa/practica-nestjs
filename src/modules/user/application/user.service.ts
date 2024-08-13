@@ -28,14 +28,21 @@ export class UserService {
     return userDomain;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const userDomain = await this.userRepository.findById(id);
+    if (!userDomain) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+
+    const updateUserDomain = Object.assign(userDomain, updateUserDto);
+    return this.userRepository.updateUser(updateUserDomain);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const userDomain = await this.userRepository.findById(id);
+    if (!userDomain) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+    return this.userRepository.deleteUser(id);
   }
-}
-function entityToDomain() {
-  throw new Error('Function not implemented.');
 }
