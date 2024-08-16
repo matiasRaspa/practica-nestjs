@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUserRepository } from '../domain/user.repository';
@@ -13,6 +13,10 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     const userDomain = new User(createUserDto);
+
+    //Compruebo que el email no exista para devolver error al usuario
+    await this.findOneByEmail(createUserDto.email);
+
     return this.userRepository.createUser(userDomain);
   }
 
@@ -25,7 +29,17 @@ export class UserService {
     if (!userDomain) {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
+
     return userDomain;
+  }
+
+  private async findOneByEmail(email: string): Promise<void> {
+    const userDomain = await this.userRepository.findByEmail(email);
+
+    //Si existe lanzo error
+    if (userDomain) {
+      throw new BadRequestException(`El Usuario con Email ${email} ya existe`);
+    }
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

@@ -16,6 +16,6 @@ export const typeOrmConfig = (
     database,
     entities: [UserEntity],
     synchronize: true,
-    logging: true,
+    logging: false, //sql en consola
   };
 };

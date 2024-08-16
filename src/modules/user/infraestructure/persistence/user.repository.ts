@@ -21,6 +21,14 @@ export class UserRepositoryImpl implements IUserRepository {
     return UserMapper.entityToDomain(userEntity);
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    const userEntity = await this.userRepository.findOne({ where: { email } });
+    if (!userEntity) {
+      return null;
+    }
+    return UserMapper.entityToDomain(userEntity);
+  }
+
   async findAll(): Promise<User[]> {
     const userEntityList = await this.userRepository.find();
     const userDomainList = userEntityList.map((u) =>
